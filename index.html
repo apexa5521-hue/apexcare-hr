@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة رفع الوثائق | Document Upload Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#1B3A5C; --blue:#2E6DA4; --teal:#00C896; --teal-dark:#009e78;
+      --bg:#F0F4F8; --surface:#FFFFFF; --border:#D8E2EE;
+      --text:#1a2332; --sub:#5a6b7d; --danger:#E63946; --success:#10B981;
+      --r:14px; --r-sm:8px;
+      --shadow:0 8px 32px rgba(27,58,92,0.12);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Tajawal','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl;}
+    .lang-bar{background:var(--navy);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;}
+    .lang-bar-title{color:rgba(255,255,255,0.65);font-size:12px;}
+    .lang-btns{display:flex;gap:6px;}
+    .lang-btn{padding:4px 12px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+    .lang-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+    .page-wrap{min-height:calc(100vh - 41px);display:flex;flex-direction:column;align-items:center;padding:28px 16px 48px;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(46,109,164,0.07) 0%,transparent 60%),var(--bg);}
+    .container{width:100%;max-width:500px;}
+    .brand-header{text-align:center;margin-bottom:24px;}
+    .brand-icon{width:64px;height:64px;background:linear-gradient(145deg,var(--navy),var(--blue));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;margin-bottom:12px;box-shadow:0 8px 24px rgba(27,58,92,0.25);}
+    .brand-name{font-size:22px;font-weight:800;color:var(--navy);}
+    .brand-sub{font-size:13px;color:var(--sub);margin-top:4px;}
+    .card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;}
+    .card-head{background:linear-gradient(135deg,var(--navy),var(--blue));padding:22px 26px;}
+    .card-head-title{font-size:16px;font-weight:700;color:#fff;}
+    .card-head-sub{font-size:12px;color:rgba(255,255,255,0.65);margin-top:4px;}
+    .steps{display:flex;align-items:center;justify-content:center;gap:0;padding:20px 26px 0;}
+    .step{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;position:relative;}
+    .step:not(:last-child)::after{content:'';position:absolute;top:14px;left:0;width:100%;height:2px;background:var(--border);z-index:0;}
+    .step.done:not(:last-child)::after,.step.active:not(:last-child)::after{background:var(--blue);}
+    .step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:#f8f9fa;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--sub);position:relative;z-index:1;transition:all 0.3s;}
+    .step.active .step-dot{border-color:var(--blue);background:var(--navy);color:#fff;box-shadow:0 0 0 3px rgba(46,109,164,0.2);}
+    .step.done .step-dot{border-color:var(--teal);background:var(--teal);color:#fff;}
+    .step-lbl{font-size:10px;color:var(--sub);font-weight:600;}
+    .step.active .step-lbl{color:var(--navy);}
+    .card-body{padding:24px 26px;}
+    .alert{display:none;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:500;margin-bottom:16px;}
+    .alert.show{display:flex;}
+    .alert-error  {background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
+    .alert-success{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;}
+    .alert-info   {background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD;}
+    .form-sec{display:none;}
+    .form-sec.active{display:block;}
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+    label{font-size:13px;font-weight:600;color:var(--text);}
+    label .req{color:var(--danger);margin-right:2px;}
+    input,select{font-family:inherit;font-size:14px;color:var(--text);background:#F8FAFC;border:1.5px solid var(--border);border-radius:var(--r-sm);padding:10px 13px;outline:none;transition:all 0.2s;width:100%;}
+    input:focus,select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(46,109,164,0.1);}
+    .emp-preview{display:none;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:var(--r-sm);padding:12px 16px;margin-top:10px;}
+    .emp-preview.show{display:block;}
+    .emp-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:3px 0;}
+    .emp-lbl{color:var(--sub);}
+    .emp-val{font-weight:700;color:var(--navy);}
+    .upload-zone{border:2px dashed var(--border);border-radius:var(--r-sm);padding:28px 16px;text-align:center;cursor:pointer;transition:all 0.3s;background:#F8FAFC;position:relative;overflow:hidden;}
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:#EFF6FF;}
+    .upload-zone.has-file{border-color:var(--teal);background:#F0FDF4;}
+    .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .upload-icon{font-size:36px;display:block;margin-bottom:8px;color:var(--sub);}
+    .upload-label{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px;}
+    .upload-sub{font-size:12px;color:var(--sub);}
+    .file-chosen{display:none;align-items:center;gap:8px;background:#F0FDF4;border-radius:6px;padding:8px 12px;margin-top:10px;font-size:13px;font-weight:500;color:var(--teal-dark);}
+    .file-chosen.show{display:flex;}
+    .progress-wrap{display:none;margin-top:14px;}
+    .progress-wrap.show{display:block;}
+    .progress-track{height:5px;background:var(--border);border-radius:99px;overflow:hidden;}
+    .progress-bar{height:100%;background:linear-gradient(to left,var(--teal),var(--blue));width:0%;transition:width 0.4s;}
+    .progress-lbl{font-size:12px;color:var(--sub);margin-top:5px;text-align:center;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 22px;border-radius:var(--r-sm);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all 0.25s;width:100%;}
+    .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;box-shadow:0 4px 12px rgba(27,58,92,0.25);}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-ghost{background:var(--bg);color:var(--sub);border:1.5px solid var(--border);}
+    .btn-ghost:hover{background:#e8eef5;}
+    .btn-success{background:linear-gradient(135deg,#009e78,var(--teal));color:#fff;box-shadow:0 4px 12px rgba(0,200,150,0.25);}
+    .btn-group{display:flex;gap:10px;}
+    .success-wrap{text-align:center;padding:8px 0;}
+    .success-circle{width:72px;height:72px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:32px;color:#fff;margin-bottom:14px;box-shadow:0 6px 20px rgba(0,200,150,0.3);}
+    .success-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+    .success-sub{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:20px;}
+    .page-foot{text-align:center;margin-top:18px;font-size:12px;color:var(--sub);}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    html[lang="en"] body{direction:ltr;font-family:'Inter','Tajawal',sans-serif;}
+    html[lang="en"] .progress-bar{background:linear-gradient(to right,var(--teal),var(--blue));}
+  </style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span class="lang-bar-title" id="lb-title">نظام الموارد البشرية الرقمي</span>
+  <div class="lang-btns">
+    <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+    <button class="lang-btn"        onclick="setLang('en')">English</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="container">
+    <div class="brand-header">
+      <div class="brand-icon">HR</div>
+      <div class="brand-name" id="brand-name">بوابة الموارد البشرية الرقمية</div>
+      <div class="brand-sub"  id="brand-sub">نظام ادارة الجاهزية الوظيفية</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-title" id="ch-title">رفع الوثائق الرسمية</div>
+        <div class="card-head-sub"   id="ch-sub">ارفع وثائقك بشكل آمن عبر البوابة الرقمية</div>
+      </div>
+
+      <div class="steps">
+        <div class="step active" id="st-1"><div class="step-dot" id="sd-1">1</div><span class="step-lbl" id="sl-1">التحقق</span></div>
+        <div class="step"        id="st-2"><div class="step-dot" id="sd-2">2</div><span class="step-lbl" id="sl-2">الوثيقة</span></div>
+        <div class="step"        id="st-3"><div class="step-dot" id="sd-3">3</div><span class="step-lbl" id="sl-3">الرفع</span></div>
+      </div>
+
+      <div class="card-body">
+        <div class="alert" id="main-alert"><span class="alert-msg"></span></div>
+
+        <!-- STEP 1 -->
+        <div class="form-sec active" id="fsec-1">
+          <div class="field">
+            <label for="empId"><span id="l-empid">الرقم الوظيفي</span> <span class="req">*</span></label>
+            <input type="text" id="empId" placeholder="EMP-001" autocomplete="off">
+          </div>
+          <div class="emp-preview" id="emp-preview">
+            <div class="emp-row"><span class="emp-lbl" id="pl-name">الاسم</span><span class="emp-val" id="pv-name">—</span></div>
+            <div class="emp-row"><span class="emp-lbl" id="pl-dept">القسم</span><span class="emp-val" id="pv-dept">—</span></div>
+            <div class="emp-row"><span class="emp-lbl" id="pl-status">الحالة</span><span class="emp-val" id="pv-status">—</span></div>
+          </div>
+          <div style="margin-top:18px;">
+            <button class="btn btn-primary" onclick="verifyEmp()" id="btn-verify">التحقق</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="form-sec" id="fsec-2">
+          <div class="field">
+            <label><span id="l-empid-disp">الرقم الوظيفي</span></label>
+            <input type="text" id="empId-disp" disabled>
+          </div>
+          <div class="field">
+            <label for="docType"><span id="l-doctype">نوع الوثيقة</span> <span class="req">*</span></label>
+            <select id="docType" onchange="checkReady()">
+              <option value="" disabled selected>— اختر / Select —</option>
+              <optgroup label="الوثائق الإلزامية / Mandatory Documents">
+                <option value="الهوية الوطنية">الهوية الوطنية / National ID</option>
+                <option value="ترخيص الهيئة">ترخيص الهيئة / Health Authority License</option>
+                <option value="شهادة BLS">شهادة BLS / BLS Certificate</option>
+                <option value="نموذج Orientation">نموذج Orientation / Orientation Form</option>
+                <option value="التوصيف الوظيفي">التوصيف الوظيفي / Job Description</option>
+                <option value="سيرة ذاتية">سيرة ذاتية / CV & Resume</option>
+                <option value="شهادة الداتا فلو">شهادة الداتا فلو / DataFlow Certificate</option>
+                <option value="شهادة الخبرات السابقة">شهادة الخبرات السابقة / Experience Certificate</option>
+                <option value="التسجيل المهني (وزارة الصحة)">التسجيل المهني / MOH Registration</option>
+                <option value="عقد العمل">عقد العمل / Employment Contract</option>
+                <option value="تقييم الأداء">تقييم الأداء / Performance Evaluation</option>
+                <option value="إقرار السرية">إقرار السرية / Confidentiality Declaration</option>
+              </optgroup>
+              <optgroup label="عند الطلب / Upon Request">
+                <option value="المؤهل العلمي">المؤهل العلمي / Academic Qualification</option>
+                <option value="الدورات">الدورات التدريبية / Training Courses</option>
+                <option value="تأمين الأخطاء الطبية">تأمين الأخطاء الطبية / Malpractice Insurance</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="field">
+            <label id="l-file">الملف <span class="req">*</span></label>
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFile(this)">
+              <span class="upload-icon">&#8679;</span>
+              <div class="upload-label" id="ul-label">اسحب وافلت الملف هنا</div>
+              <div class="upload-sub"   id="ul-sub">PDF, JPG, PNG, DOC — حتى / up to 10 MB</div>
+            </div>
+            <div class="file-chosen" id="file-chosen"><span>📄</span><span id="file-name-txt"></span></div>
+          </div>
+          <div class="progress-wrap" id="prog-wrap">
+            <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+            <div class="progress-lbl" id="prog-lbl">جاري الرفع...</div>
+          </div>
+          <div class="btn-group">
+            <button class="btn btn-ghost"    onclick="goStep(1)" id="btn-back" style="flex:1;">رجوع</button>
+            <button class="btn btn-primary"  id="upload-btn" onclick="doUpload()" disabled style="flex:2;"><span id="upload-lbl">رفع الوثيقة</span></button>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="form-sec" id="fsec-3">
+          <div class="success-wrap">
+            <div class="success-circle">✓</div>
+            <div class="success-title" id="succ-title">تم الرفع بنجاح</div>
+            <div class="success-sub"   id="succ-sub">تم حفظ الوثيقة في ملف الموظف وتحديث الشيت</div>
+            <button class="btn btn-success" onclick="resetForm()" id="btn-again">رفع وثيقة اخرى</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="page-foot">HR System © 2025 | APEXCARE</div>
+  </div>
+</div>
+
+<script>
+  // ← رابط Apps Script
+  var GAS_URL = "https://script.google.com/macros/s/AKfycbzOcf_SaSZ4na9lYjIajTLkT3-apapMxoPruXRG6UCFTIm5UujF_JEYh9mCOL-Mg7pQ2Q/exec";
+
+  var lang = 'ar';
+  var state = { empId: '', file: null };
+
+  // Pre-fill من URL
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('empId');
+    if (id) document.getElementById('empId').value = id;
+  })();
+
+  function setLang(l) {
+    lang = l;
+    document.getElementById('html-root').setAttribute('lang', l);
+    document.getElementById('html-root').setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', (l==='ar'&&b.textContent==='عربي')||(l==='en'&&b.textContent==='English'));
+    });
+  }
+
+  function goStep(step) {
+    [1,2,3].forEach(function(i) {
+      document.getElementById('fsec-'+i).classList.toggle('active', i===step);
+      var dot = document.getElementById('st-'+i);
+      dot.classList.remove('active','done');
+      if (i < step) dot.classList.add('done');
+      if (i === step) dot.classList.add('active');
+      document.getElementById('sd-'+i).textContent = i < step ? '✓' : i;
+    });
+    clearAlert();
+  }
+
+  function verifyEmp() {
+    var id = document.getElementById('empId').value.trim();
+    if (!id) { showAlert('error', lang==='ar'?'يرجى ادخال الرقم الوظيفي':'Please enter employee ID'); return; }
+    showAlert('info', lang==='ar'?'جاري التحقق...':'Verifying...');
+
+    fetch(GAS_URL + '?action=verify&empId=' + encodeURIComponent(id))
+      .then(function(r){ return r.json(); })
+      .then(function(emp) {
+        clearAlert();
+        if (emp && emp.name) {
+          document.getElementById('pv-name').textContent   = emp.name   || '—';
+          document.getElementById('pv-dept').textContent   = emp.dept   || '—';
+          document.getElementById('pv-status').textContent = emp.status || '—';
+          document.getElementById('emp-preview').classList.add('show');
+          state.empId = id;
+          setTimeout(function(){ proceedStep2(id); }, 1200);
+        } else {
+          showAlert('error', lang==='ar'?'الرقم الوظيفي غير مسجل':'Employee ID not found');
+        }
+      })
+      .catch(function() {
+        clearAlert();
+        state.empId = id;
+        proceedStep2(id);
+      });
+  }
+
+  function proceedStep2(id) {
+    document.getElementById('empId-disp').value = id;
+    goStep(2);
+  }
+
+  // Drag & Drop
+  (function(){
+    var zone = document.getElementById('upload-zone');
+    zone.addEventListener('dragover',  function(e){ e.preventDefault(); zone.classList.add('drag'); });
+    zone.addEventListener('dragleave', function(){ zone.classList.remove('drag'); });
+    zone.addEventListener('drop', function(e){
+      e.preventDefault(); zone.classList.remove('drag');
+      var f = e.dataTransfer.files[0]; if (f) processFile(f);
+    });
+  })();
+
+  function handleFile(input){ if (input.files && input.files[0]) processFile(input.files[0]); }
+
+  function processFile(file) {
+    if (file.size > 10*1024*1024) { showAlert('error','حجم الملف كبير / File too large (max 10MB)'); return; }
+    state.file = file;
+    document.getElementById('upload-zone').classList.add('has-file');
+    document.getElementById('file-name-txt').textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+    document.getElementById('file-chosen').classList.add('show');
+    checkReady();
+  }
+
+  function checkReady() {
+    document.getElementById('upload-btn').disabled = !(document.getElementById('docType').value && state.file);
+  }
+
+  function doUpload() {
+    var btn = document.getElementById('upload-btn');
+    var lbl = document.getElementById('upload-lbl');
+    btn.disabled = true;
+    lbl.innerHTML = '<div class="spinner"></div>';
+
+    var prog = document.getElementById('prog-wrap');
+    var bar  = document.getElementById('prog-bar');
+    var pLbl = document.getElementById('prog-lbl');
+    prog.classList.add('show');
+
+    var pct = 0;
+    var interval = setInterval(function(){
+      pct = Math.min(pct + Math.random()*12, 85);
+      bar.style.width = pct + '%';
+      pLbl.textContent = (lang==='ar'?'جاري الرفع... ':'Uploading... ') + Math.round(pct) + '%';
+    }, 300);
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var base64 = e.target.result.split(',')[1];
+      var payload = {
+        action:   'upload',
+        empId:    state.empId,
+        docType:  document.getElementById('docType').value,
+        base64:   base64,
+        fileName: state.file.name,
+        mimeType: state.file.type
+      };
+
+      fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(res) {
+        clearInterval(interval);
+        bar.style.width = '100%';
+        pLbl.textContent = lang==='ar' ? 'اكتمل' : 'Done';
+        setTimeout(function(){
+          prog.classList.remove('show');
+          if (res.success) { goStep(3); }
+          else {
+            showAlert('error', res.message);
+            btn.disabled = false;
+            lbl.textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+          }
+        }, 600);
+      })
+      .catch(function(err) {
+        clearInterval(interval);
+        prog.classList.remove('show');
+        showAlert('error', err.message || 'خطأ في الرفع');
+        btn.disabled = false;
+        lbl.textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+      });
+    };
+    reader.readAsDataURL(state.file);
+  }
+
+  function resetForm() {
+    state = { empId: '', file: null };
+    document.getElementById('empId').value = '';
+    document.getElementById('docType').value = '';
+    document.getElementById('fileInput').value = '';
+    document.getElementById('file-chosen').classList.remove('show');
+    document.getElementById('upload-zone').classList.remove('has-file');
+    document.getElementById('emp-preview').classList.remove('show');
+    document.getElementById('upload-btn').disabled = true;
+    document.getElementById('upload-lbl').textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+    goStep(1); clearAlert();
+  }
+
+  function showAlert(type, msg) {
+    var el = document.getElementById('main-alert');
+    el.className = 'alert alert-' + type + ' show';
+    el.querySelector('.alert-msg').textContent = msg;
+  }
+  function clearAlert(){ document.getElementById('main-alert').className = 'alert'; }
+</script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل موظف | Employee Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:#0D2137; --blue:#2563EB; --teal:#0D9488;
+      --bg:#F1F5F9; --surface:#FFFFFF; --border:#CBD5E1;
+      --text:#0F172A; --sub:#64748B; --danger:#EF4444; --success:#10B981;
+      --r:12px; --shadow:0 4px 24px rgba(13,33,55,0.10);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Tajawal','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl;}
+    .lang-bar{background:var(--navy);padding:10px 24px;display:flex;justify-content:space-between;align-items:center;}
+    .lang-bar-title{color:rgba(255,255,255,0.65);font-size:13px;}
+    .lang-btns{display:flex;gap:6px;}
+    .lang-btn{padding:5px 14px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.65);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;font-family:inherit;}
+    .lang-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 45px);}
+    .sidebar{background:linear-gradient(180deg,#0D2137 0%,#0a1929 100%);padding:32px 24px;display:flex;flex-direction:column;position:sticky;top:0;height:calc(100vh - 45px);overflow:hidden;}
+    .brand-logo{width:48px;height:48px;background:linear-gradient(135deg,var(--blue),var(--teal));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;margin-bottom:12px;}
+    .brand-name{font-size:18px;font-weight:800;color:#fff;}
+    .brand-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;}
+    .step-nav{display:flex;flex-direction:column;gap:4px;flex:1;margin-top:36px;}
+    .step-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;transition:all 0.25s;}
+    .step-item.active{background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.3);}
+    .step-item.done{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);}
+    .step-num{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:rgba(255,255,255,0.4);flex-shrink:0;transition:all 0.25s;}
+    .step-item.active .step-num{border-color:var(--blue);background:var(--blue);color:#fff;}
+    .step-item.done .step-num{border-color:var(--success);background:var(--success);color:#fff;}
+    .step-label{font-size:13px;font-weight:600;color:rgba(255,255,255,0.65);}
+    .step-item.active .step-label{color:#fff;}
+    .sidebar-foot{font-size:11px;color:rgba(255,255,255,0.25);text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,0.07);}
+    .main{padding:32px 40px;overflow-y:auto;}
+    .mode-tabs{display:inline-flex;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:3px;gap:3px;margin-bottom:20px;}
+    .mode-tab{padding:7px 18px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--sub);transition:all 0.2s;}
+    .mode-tab.active{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;box-shadow:0 2px 8px rgba(37,99,235,0.3);}
+    .page-title{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.3px;}
+    .page-desc{font-size:13px;color:var(--sub);margin-top:4px;}
+    .form-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-top:20px;}
+    .progress-bar{height:3px;background:#E2E8F0;}
+    .progress-fill{height:100%;background:linear-gradient(to left,var(--teal),var(--blue));transition:width 0.4s ease;}
+    .sec-header{display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid #F1F5F9;background:#F8FAFC;}
+    .sec-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#EFF6FF;color:var(--navy);flex-shrink:0;}
+    .sec-title{font-size:14px;font-weight:700;color:var(--navy);}
+    .sec-sub{font-size:12px;color:var(--sub);margin-top:2px;}
+    .form-body{padding:24px;}
+    .hr-banner{display:none;background:#EFF6FF;border:1.5px solid #BFDBFE;border-radius:8px;padding:12px 16px;margin-bottom:18px;font-size:13px;color:#1E40AF;font-weight:500;align-items:center;gap:10px;}
+    .hr-banner.visible{display:flex;}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    .full{grid-column:1/-1;}
+    .field{display:flex;flex-direction:column;gap:6px;}
+    label{font-size:13px;font-weight:600;color:var(--text);}
+    label .req{color:var(--danger);margin-right:2px;}
+    label .opt{color:var(--sub);font-weight:400;font-size:11px;}
+    input,select,textarea{font-family:inherit;font-size:14px;color:var(--text);background:#F8FAFC;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;outline:none;transition:all 0.2s;width:100%;}
+    input:focus,select:focus,textarea:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+    input.error,select.error{border-color:var(--danger);background:#FFF5F5;}
+    .field-err{font-size:11px;color:var(--danger);display:none;}
+    .field-err.show{display:block;}
+    .submit-area{padding:20px 24px;background:#F8FAFC;border-top:1px solid #F1F5F9;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .submit-note{font-size:12px;color:var(--sub);}
+    .btn-group{display:flex;gap:10px;}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 22px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;}
+    .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;box-shadow:0 4px 12px rgba(37,99,235,0.25);}
+    .btn-primary:hover:not(:disabled){transform:translateY(-1px);}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-ghost{background:transparent;color:var(--sub);border:1.5px solid var(--border);}
+    .btn-ghost:hover{background:#F1F5F9;}
+    .alert{display:none;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;margin:0 24px 16px;animation:fadeIn 0.3s;}
+    .alert.show{display:flex;}
+    .alert-error{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
+    .review-grid{display:grid;gap:10px;}
+    .review-row{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#F8FAFC;border-radius:8px;border:1px solid #E2E8F0;}
+    .review-label{font-size:12px;color:var(--sub);font-weight:500;}
+    .review-val{font-size:13px;font-weight:700;color:var(--navy);}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(13,33,55,0.5);backdrop-filter:blur(4px);z-index:100;align-items:center;justify-content:center;}
+    .overlay.show{display:flex;}
+    .success-card{background:var(--surface);border-radius:16px;padding:40px 32px;text-align:center;max-width:400px;width:90%;box-shadow:0 16px 48px rgba(13,33,55,0.2);animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+    .success-icon{width:72px;height:72px;background:linear-gradient(135deg,var(--teal),var(--success));border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:32px;color:#fff;margin-bottom:16px;box-shadow:0 6px 20px rgba(16,185,129,0.3);}
+    .success-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+    .success-body{font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:20px;}
+    .success-meta{background:#F0FDF4;border:1.5px solid #A7F3D0;border-radius:8px;padding:12px 16px;margin-bottom:20px;text-align:right;}
+    .meta-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;}
+    .meta-lbl{color:var(--sub);}
+    .meta-val{font-weight:700;color:var(--navy);}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes popIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+    .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    html[lang="en"] body{direction:ltr;font-family:'Inter','Tajawal',sans-serif;}
+    html[lang="en"] .progress-fill{background:linear-gradient(to right,var(--teal),var(--blue));}
+    @media(max-width:768px){.layout{grid-template-columns:1fr;}.sidebar{display:none;}.main{padding:20px 16px;}.grid-2{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<div class="lang-bar">
+  <span class="lang-bar-title">نظام الموارد البشرية الرقمي</span>
+  <div class="lang-btns">
+    <button class="lang-btn active" onclick="setLang('ar')">عربي</button>
+    <button class="lang-btn"        onclick="setLang('en')">English</button>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div>
+      <div class="brand-logo">HR</div>
+      <div class="brand-name">HR</div>
+      <div class="brand-sub" id="sb-sub">نظام الجاهزية الوظيفية</div>
+    </div>
+    <nav class="step-nav">
+      <div class="step-item active" id="nav-1"><div class="step-num" id="sn-1">1</div><span class="step-label" id="sl-1">البيانات الاساسية</span></div>
+      <div class="step-item"        id="nav-2"><div class="step-num" id="sn-2">2</div><span class="step-label" id="sl-2">التفاصيل الوظيفية</span></div>
+      <div class="step-item"        id="nav-3"><div class="step-num" id="sn-3">3</div><span class="step-label" id="sl-3">المراجعة والتاكيد</span></div>
+    </nav>
+    <div class="sidebar-foot">HR System © 2025 | APEXCARE</div>
+  </aside>
+
+  <main class="main">
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="setMode('employee')" id="tab-emp">موظف / Employee</button>
+      <button class="mode-tab"        onclick="setMode('hr')"       id="tab-hr">HR</button>
+    </div>
+    <div class="page-title" id="pg-title">تسجيل بياناتك الوظيفية</div>
+    <div class="page-desc"  id="pg-desc">ادخل بياناتك لاضافتك في نظام الجاهزية</div>
+
+    <div class="form-card">
+      <div class="progress-bar"><div class="progress-fill" id="prog" style="width:33%"></div></div>
+      <div class="alert" id="main-alert"><span class="alert-msg"></span></div>
+
+      <!-- STEP 1 -->
+      <div id="sec-1">
+        <div class="sec-header">
+          <div class="sec-icon">1</div>
+          <div><div class="sec-title" id="s1-title">البيانات الاساسية</div><div class="sec-sub" id="s1-sub">الاسم، الرقم، الايميل، القسم</div></div>
+        </div>
+        <div class="form-body">
+          <div class="hr-banner" id="hr-banner">🔐 وضع الاخصائية - تسجيل موظف في النظام</div>
+          <div class="grid-2">
+            <div class="field">
+              <label for="empName">اسم الموظف <span class="req">*</span></label>
+              <input type="text" id="empName" placeholder="الاسم الكامل / Full Name">
+              <span class="field-err" id="e-name">يرجى ادخال الاسم</span>
+            </div>
+            <div class="field">
+              <label for="empId">الرقم الوظيفي <span class="req">*</span></label>
+              <input type="text" id="empId" placeholder="EMP-001">
+              <span class="field-err" id="e-id">يرجى ادخال الرقم</span>
+            </div>
+            <div class="field">
+              <label for="empEmail">البريد الالكتروني <span class="req">*</span></label>
+              <input type="email" id="empEmail" placeholder="name@apexcaresa.com" dir="ltr">
+              <span class="field-err" id="e-email">بريد غير صحيح</span>
+            </div>
+            <div class="field">
+              <label for="empDept">القسم <span class="req">*</span></label>
+              <select id="empDept" onchange="handleDeptChange()">
+                <option value="" disabled selected>— اختر / Select —</option>
+                <optgroup label="عيادة الاسنان / Dental Clinic">
+                  <option value="طبيب اسنان / Dentist">طبيب اسنان / Dentist</option>
+                  <option value="فني اسنان / Dental Technician">فني اسنان / Dental Technician</option>
+                  <option value="مساعد طبيب اسنان / Dental Assistant">مساعد طبيب / Dental Assistant</option>
+                </optgroup>
+                <optgroup label="عيادة الجلدية / Dermatology Clinic">
+                  <option value="طبيب جلدية / Dermatologist">طبيب جلدية / Dermatologist</option>
+                  <option value="فني ليزر / Laser Technician">فني ليزر / Laser Technician</option>
+                  <option value="مساعد طبيب جلدية / Derm Assistant">مساعد طبيب جلدية / Derm Assistant</option>
+                </optgroup>
+                <optgroup label="التمريض / Nursing">
+                  <option value="ممرض/ة / Nurse">ممرض/ة / Nurse</option>
+                  <option value="منسق مرضى / Patient Coordinator">منسق مرضى / Patient Coordinator</option>
+                </optgroup>
+                <optgroup label="الادارة / Administration">
+                  <option value="استقبال / Receptionist">استقبال / Receptionist</option>
+                  <option value="موارد بشرية / HR">موارد بشرية / HR</option>
+                  <option value="مالية / Finance">مالية / Finance</option>
+                  <option value="تقنية / IT">تقنية / IT</option>
+                  <option value="اخرى / Other">اخرى / Other</option>
+                </optgroup>
+              </select>
+              <span class="field-err" id="e-dept">يرجى اختيار القسم</span>
+            </div>
+            <div class="field full" id="spec-wrap" style="display:none;">
+              <label for="docSpec">التخصص الدقيق <span class="req">*</span></label>
+              <select id="docSpec" onchange="checkSpecOther()">
+                <option value="" disabled selected>— اختر / Select —</option>
+                <optgroup label="تخصصات الاسنان / Dental">
+                  <option>اسنان عامة / General Dentistry</option>
+                  <option>تقويم / Orthodontics</option>
+                  <option>زراعة / Implantology</option>
+                  <option>تجميل / Cosmetic Dentistry</option>
+                  <option>علاج عصب / Endodontics</option>
+                  <option>لثة / Periodontics</option>
+                  <option>جراحة فم / Oral Surgery</option>
+                  <option>اسنان اطفال / Pedodontics</option>
+                  <option>اطراف صناعية / Prosthodontics</option>
+                </optgroup>
+                <optgroup label="تخصصات الجلدية / Dermatology">
+                  <option>جلدية عامة / General Dermatology</option>
+                  <option>ليزر وتجميل / Laser and Aesthetics</option>
+                  <option>علاج حب الشباب / Acne Treatment</option>
+                  <option>ازالة الشعر / Hair Removal</option>
+                  <option>فيلر وبوتوكس / Filler and Botox</option>
+                  <option>بهاق وصدفية / Vitiligo and Psoriasis</option>
+                  <option>جراحة جلد / Dermatologic Surgery</option>
+                  <option>جلدية اطفال / Pediatric Dermatology</option>
+                </optgroup>
+                <option value="other">اخرى / Other</option>
+              </select>
+              <span class="field-err" id="e-spec">يرجى اختيار التخصص</span>
+            </div>
+            <div class="field full" id="spec-other-wrap" style="display:none;">
+              <label for="specOther">اكتب التخصص <span class="req">*</span></label>
+              <input type="text" id="specOther" placeholder="...">
+              <span class="field-err" id="e-spec-other">يرجى كتابة التخصص</span>
+            </div>
+          </div>
+        </div>
+        <div class="submit-area">
+          <span class="submit-note">* الحقول الالزامية</span>
+          <button class="btn btn-primary" onclick="goNext(1)">التالي / Next</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div id="sec-2" style="display:none;">
+        <div class="sec-header">
+          <div class="sec-icon">2</div>
+          <div><div class="sec-title">التفاصيل الوظيفية</div><div class="sec-sub">المسمى، تاريخ التعيين، معلومات الهوية</div></div>
+        </div>
+        <div class="form-body">
+          <div class="grid-2">
+            <div class="field">
+              <label for="jobTitle">المسمى الوظيفي <span class="req">*</span></label>
+              <input type="text" id="jobTitle" placeholder="مثال: Senior Nurse">
+              <span class="field-err" id="e-title">يرجى ادخال المسمى</span>
+            </div>
+            <div class="field">
+              <label for="hireDate">تاريخ التعيين <span class="req">*</span></label>
+              <input type="date" id="hireDate">
+              <span class="field-err" id="e-date">يرجى تحديد التاريخ</span>
+            </div>
+            <div class="field">
+              <label for="dob">تاريخ الميلاد <span class="req">*</span></label>
+              <input type="date" id="dob">
+              <span class="field-err" id="e-dob">يرجى تحديد تاريخ الميلاد</span>
+            </div>
+            <div class="field">
+              <label for="national">رقم الهوية الوطنية <span class="opt">(اختياري)</span></label>
+              <input type="text" id="national" placeholder="10 digits" maxlength="10" inputmode="numeric" dir="ltr">
+            </div>
+            <div class="field">
+              <label for="phone">رقم الجوال <span class="opt">(اختياري)</span></label>
+              <input type="tel" id="phone" placeholder="05XXXXXXXX" dir="ltr">
+            </div>
+          </div>
+
+          <div style="margin-top:20px;padding:16px;background:#F0F9FF;border:1.5px solid #BAE6FD;border-radius:10px;">
+            <div style="font-size:13px;font-weight:700;color:#0D2137;margin-bottom:12px;">الوثائق عند الطلب / Upon Request</div>
+            <div style="font-size:12px;color:#64748B;margin-bottom:14px;">حدد الوثائق المطلوبة لهذا الموظف</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <label style="display:flex;align-items:center;gap:10px;font-weight:500;cursor:pointer;">
+                <input type="checkbox" id="needQual"      style="width:16px;height:16px;accent-color:#2563EB;">
+                <span>المؤهل العلمي / Academic Qualification</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;font-weight:500;cursor:pointer;">
+                <input type="checkbox" id="needCourses"   style="width:16px;height:16px;accent-color:#2563EB;">
+                <span>الدورات التدريبية / Training Courses</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:10px;font-weight:500;cursor:pointer;">
+                <input type="checkbox" id="needInsurance" style="width:16px;height:16px;accent-color:#2563EB;">
+                <span>تأمين الأخطاء الطبية / Malpractice Insurance</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="submit-area">
+          <button class="btn btn-ghost" onclick="goBack(2)">رجوع / Back</button>
+          <button class="btn btn-primary" onclick="goNext(2)">التالي / Next</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="sec-3" style="display:none;">
+        <div class="sec-header">
+          <div class="sec-icon">3</div>
+          <div><div class="sec-title">مراجعة البيانات</div><div class="sec-sub">تحقق من البيانات قبل الارسال</div></div>
+        </div>
+        <div class="form-body"><div class="review-grid" id="review-content"></div></div>
+        <div class="submit-area">
+          <button class="btn btn-ghost"   onclick="goBack(3)">تعديل / Edit</button>
+          <button class="btn btn-primary" id="submit-btn" onclick="submitForm()"><span id="submit-label">تاكيد / Confirm</span></button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <div class="success-title">تم التسجيل بنجاح</div>
+    <div class="success-body">تم اضافة الموظف وارسال بريد ترحيبي لاستكمال الوثائق</div>
+    <div class="success-meta" id="succ-meta"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button class="btn btn-primary" onclick="resetForm()">اضافة موظف اخر</button>
+      <button class="btn btn-ghost"   onclick="document.getElementById('overlay').classList.remove('show')">اغلاق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var GAS_URL = "https://script.google.com/macros/s/AKfycbzOcf_SaSZ4na9lYjIajTLkT3-apapMxoPruXRG6UCFTIm5UujF_JEYh9mCOL-Mg7pQ2Q/exec";
+  var lang = 'ar', isHR = false;
+
+  function setLang(l) {
+    lang = l;
+    document.getElementById('html-root').setAttribute('lang', l);
+    document.getElementById('html-root').setAttribute('dir', l==='ar'?'rtl':'ltr');
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.classList.toggle('active',(l==='ar'&&b.textContent==='عربي')||(l==='en'&&b.textContent==='English'));
+    });
+  }
+
+  function setMode(m) {
+    isHR = m === 'hr';
+    document.getElementById('tab-emp').classList.toggle('active', !isHR);
+    document.getElementById('tab-hr').classList.toggle('active', isHR);
+    document.getElementById('hr-banner').classList.toggle('visible', isHR);
+    document.getElementById('pg-title').textContent = isHR ? 'تسجيل موظف جديد' : 'تسجيل بياناتك الوظيفية';
+    document.getElementById('pg-desc').textContent  = isHR ? 'ادخل بيانات الموظف لاضافته في الشيت' : 'ادخل بياناتك لاضافتك في نظام الجاهزية';
+  }
+
+  function isDoctor() {
+    var d = document.getElementById('empDept').value;
+    return d.indexOf('طبيب') !== -1 || d.indexOf('Dentist') !== -1 || d.indexOf('Dermatologist') !== -1;
+  }
+  function handleDeptChange() {
+    var show = isDoctor();
+    document.getElementById('spec-wrap').style.display = show ? 'block' : 'none';
+    if (!show) { document.getElementById('docSpec').value = ''; document.getElementById('spec-other-wrap').style.display = 'none'; }
+  }
+  function checkSpecOther() {
+    document.getElementById('spec-other-wrap').style.display = document.getElementById('docSpec').value === 'other' ? 'block' : 'none';
+  }
+  function getFinalSpec() {
+    var s = document.getElementById('docSpec').value;
+    if (!s) return '';
+    if (s === 'other') return v('specOther');
+    return s;
+  }
+
+  function goNext(step) { if (validate(step)) showStep(step+1); }
+  function goBack(step) { showStep(step-1); }
+
+  function showStep(step) {
+    [1,2,3].forEach(function(i) {
+      document.getElementById('sec-'+i).style.display = i===step ? 'block' : 'none';
+      var nav = document.getElementById('nav-'+i);
+      nav.classList.remove('active','done');
+      if (i < step) nav.classList.add('done');
+      if (i === step) nav.classList.add('active');
+      document.getElementById('sn-'+i).textContent = i < step ? '✓' : i;
+    });
+    document.getElementById('prog').style.width = {1:'33%',2:'66%',3:'100%'}[step];
+    clearAlert();
+    if (step === 3) buildReview();
+  }
+
+  function validate(step) {
+    clearErrors(); var ok = true;
+    if (step === 1) {
+      if (!v('empName'))  { err('name',true);  ok=false; }
+      if (!v('empId'))    { err('id',true);    ok=false; }
+      if (!validEmail())  { err('email',true); ok=false; }
+      if (!v('empDept'))  { err('dept',true);  ok=false; }
+      if (isDoctor()) {
+        if (!document.getElementById('docSpec').value) { err('spec',true); ok=false; }
+        else if (document.getElementById('docSpec').value==='other' && !v('specOther')) { err('spec-other',true); ok=false; }
+      }
+    }
+    if (step === 2) {
+      if (!v('jobTitle')) { err('title',true); ok=false; }
+      if (!v('hireDate')) { err('date',true);  ok=false; }
+      if (!v('dob'))      { err('dob',true);   ok=false; }
+    }
+    if (!ok) showAlert('error','يرجى ملء جميع الحقول الالزامية');
+    return ok;
+  }
+
+  var v = function(id){ return document.getElementById(id).value.trim(); };
+  var validEmail = function(){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('empEmail')); };
+
+  function err(key, show) {
+    var el = document.getElementById('e-'+key); if (el) el.classList.toggle('show', show);
+    var map = {name:'empName',id:'empId',email:'empEmail',dept:'empDept',spec:'docSpec','spec-other':'specOther',title:'jobTitle',date:'hireDate',dob:'dob'};
+    var inp = document.getElementById(map[key]); if (inp) inp.classList.toggle('error', show);
+  }
+  function clearErrors() {
+    document.querySelectorAll('.field-err').forEach(function(e){ e.classList.remove('show'); });
+    document.querySelectorAll('input,select').forEach(function(e){ e.classList.remove('error'); });
+  }
+
+  function buildReview() {
+    var rows = [
+      ['اسم الموظف', v('empName')],
+      ['الرقم الوظيفي', v('empId')],
+      ['البريد الالكتروني', v('empEmail')],
+      ['القسم', v('empDept')]
+    ];
+    if (isDoctor()) rows.push(['التخصص', getFinalSpec()]);
+    rows.push(['المسمى الوظيفي', v('jobTitle')], ['تاريخ التعيين', v('hireDate')]);
+    if (v('national')) rows.push(['رقم الهوية', v('national')]);
+    if (v('phone'))    rows.push(['رقم الجوال', v('phone')]);
+    document.getElementById('review-content').innerHTML = rows.map(function(r){
+      return '<div class="review-row"><span class="review-label">'+r[0]+'</span><span class="review-val">'+r[1]+'</span></div>';
+    }).join('');
+  }
+
+  function submitForm() {
+    var btn = document.getElementById('submit-btn');
+    var lbl = document.getElementById('submit-label');
+    btn.disabled = true;
+    lbl.innerHTML = '<div class="spinner"></div>';
+
+    var payload = {
+      action:   'register',
+      name:     v('empName'),
+      empId:    v('empId'),
+      email:    v('empEmail'),
+      dept:     v('empDept'),
+      specialty: getFinalSpec(),
+      jobTitle: v('jobTitle'),
+      hireDate: v('hireDate'),
+      dob:      v('dob'),
+      national: v('national'),
+      phone:    v('phone'),
+      isHR:     isHR,
+      needQual:      document.getElementById('needQual').checked,
+      needCourses:   document.getElementById('needCourses').checked,
+      needInsurance: document.getElementById('needInsurance').checked
+    };
+
+    fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res) {
+      btn.disabled = false;
+      lbl.textContent = 'تاكيد / Confirm';
+      if (res.success) { showSuccess(payload); }
+      else { showAlert('error', res.message); }
+    })
+    .catch(function(e) {
+      btn.disabled = false;
+      lbl.textContent = 'تاكيد / Confirm';
+      showAlert('error', e.message || 'خطأ في الاتصال');
+    });
+  }
+
+  function showSuccess(d) {
+    var rows = [['الاسم',d.name],['الرقم الوظيفي',d.empId],['القسم',d.dept]];
+    if (d.specialty) rows.push(['التخصص',d.specialty]);
+    document.getElementById('succ-meta').innerHTML = rows.map(function(r){
+      return '<div class="meta-row"><span class="meta-lbl">'+r[0]+'</span><span class="meta-val">'+r[1]+'</span></div>';
+    }).join('');
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  function resetForm() {
+    document.getElementById('overlay').classList.remove('show');
+    document.querySelectorAll('input,select,textarea').forEach(function(el){ el.value=''; });
+    document.getElementById('spec-wrap').style.display = 'none';
+    document.getElementById('spec-other-wrap').style.display = 'none';
+    document.getElementById('needQual').checked = false;
+    document.getElementById('needCourses').checked = false;
+    document.getElementById('needInsurance').checked = false;
+    showStep(1); clearErrors(); clearAlert();
+  }
+
+  function showAlert(type, msg) {
+    var el = document.getElementById('main-alert');
+    el.className = 'alert alert-'+type+' show';
+    el.querySelector('.alert-msg').textContent = msg;
+  }
+  function clearAlert(){ document.getElementById('main-alert').className = 'alert'; }
+</script>
+</body>
+</html>
