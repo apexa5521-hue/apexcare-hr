@@ -42,9 +42,9 @@
     .card-body{padding:24px 26px;}
     .alert{display:none;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:500;margin-bottom:16px;}
     .alert.show{display:flex;}
-    .alert-error  {background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
+    .alert-error{background:#FEE2E2;color:#991B1B;border:1px solid #FCA5A5;}
     .alert-success{background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;}
-    .alert-info   {background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD;}
+    .alert-info{background:#DBEAFE;color:#1E40AF;border:1px solid #93C5FD;}
     .form-sec{display:none;}
     .form-sec.active{display:block;}
     .field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
@@ -105,13 +105,13 @@
     <div class="brand-header">
       <div class="brand-icon">HR</div>
       <div class="brand-name" id="brand-name">بوابة الموارد البشرية الرقمية</div>
-      <div class="brand-sub"  id="brand-sub">نظام ادارة الجاهزية الوظيفية</div>
+      <div class="brand-sub" id="brand-sub">نظام ادارة الجاهزية الوظيفية</div>
     </div>
 
     <div class="card">
       <div class="card-head">
         <div class="card-head-title" id="ch-title">رفع الوثائق الرسمية</div>
-        <div class="card-head-sub"   id="ch-sub">ارفع وثائقك بشكل آمن عبر البوابة الرقمية</div>
+        <div class="card-head-sub" id="ch-sub">ارفع وثائقك بشكل آمن عبر البوابة الرقمية</div>
       </div>
 
       <div class="steps">
@@ -123,7 +123,7 @@
       <div class="card-body">
         <div class="alert" id="main-alert"><span class="alert-msg"></span></div>
 
-        <!-- STEP 1 -->
+        <!-- STEP 1: التحقق -->
         <div class="form-sec active" id="fsec-1">
           <div class="field">
             <label for="empId"><span id="l-empid">الرقم الوظيفي</span> <span class="req">*</span></label>
@@ -135,48 +135,31 @@
             <div class="emp-row"><span class="emp-lbl" id="pl-status">الحالة</span><span class="emp-val" id="pv-status">—</span></div>
           </div>
           <div style="margin-top:18px;">
-            <button class="btn btn-primary" onclick="verifyEmp()" id="btn-verify">التحقق</button>
+            <button class="btn btn-primary" onclick="verifyEmp()" id="btn-verify">
+              <span id="btn-verify-lbl">التحقق / Verify</span>
+            </button>
           </div>
         </div>
 
-        <!-- STEP 2 -->
+        <!-- STEP 2: اختيار الوثيقة -->
         <div class="form-sec" id="fsec-2">
           <div class="field">
-            <label><span id="l-empid-disp">الرقم الوظيفي</span></label>
+            <label><span id="l-empid-disp">الرقم الوظيفي / Employee ID</span></label>
             <input type="text" id="empId-disp" disabled>
           </div>
           <div class="field">
-            <label for="docType"><span id="l-doctype">نوع الوثيقة</span> <span class="req">*</span></label>
+            <label for="docType"><span id="l-doctype">نوع الوثيقة / Document Type</span> <span class="req">*</span></label>
             <select id="docType" onchange="checkReady()">
-              <option value="" disabled selected>— اختر / Select —</option>
-              <optgroup label="الوثائق الإلزامية / Mandatory Documents">
-                <option value="الهوية الوطنية">الهوية الوطنية / National ID</option>
-                <option value="ترخيص الهيئة">ترخيص الهيئة / Health Authority License</option>
-                <option value="شهادة BLS">شهادة BLS / BLS Certificate</option>
-                <option value="نموذج Orientation">نموذج Orientation / Orientation Form</option>
-                <option value="التوصيف الوظيفي">التوصيف الوظيفي / Job Description</option>
-                <option value="سيرة ذاتية">سيرة ذاتية / CV & Resume</option>
-                <option value="شهادة الداتا فلو">شهادة الداتا فلو / DataFlow Certificate</option>
-                <option value="شهادة الخبرات السابقة">شهادة الخبرات السابقة / Experience Certificate</option>
-                <option value="التسجيل المهني (وزارة الصحة)">التسجيل المهني / MOH Registration</option>
-                <option value="عقد العمل">عقد العمل / Employment Contract</option>
-                <option value="تقييم الأداء">تقييم الأداء / Performance Evaluation</option>
-                <option value="إقرار السرية">إقرار السرية / Confidentiality Declaration</option>
-              </optgroup>
-              <optgroup label="عند الطلب / Upon Request">
-                <option value="المؤهل العلمي">المؤهل العلمي / Academic Qualification</option>
-                <option value="الدورات">الدورات التدريبية / Training Courses</option>
-                <option value="تأمين الأخطاء الطبية">تأمين الأخطاء الطبية / Malpractice Insurance</option>
-              </optgroup>
+              <option value="" disabled selected id="doc-ph">— اختر / Select —</option>
             </select>
           </div>
           <div class="field">
-            <label id="l-file">الملف <span class="req">*</span></label>
+            <label id="l-file"><span id="l-file-lbl">الملف / File</span> <span class="req">*</span></label>
             <div class="upload-zone" id="upload-zone">
               <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFile(this)">
               <span class="upload-icon">&#8679;</span>
               <div class="upload-label" id="ul-label">اسحب وافلت الملف هنا</div>
-              <div class="upload-sub"   id="ul-sub">PDF, JPG, PNG, DOC — حتى / up to 10 MB</div>
+              <div class="upload-sub" id="ul-sub">PDF, JPG, PNG, DOC — حتى / up to 10 MB</div>
             </div>
             <div class="file-chosen" id="file-chosen"><span>📄</span><span id="file-name-txt"></span></div>
           </div>
@@ -185,18 +168,24 @@
             <div class="progress-lbl" id="prog-lbl">جاري الرفع...</div>
           </div>
           <div class="btn-group">
-            <button class="btn btn-ghost"    onclick="goStep(1)" id="btn-back" style="flex:1;">رجوع</button>
-            <button class="btn btn-primary"  id="upload-btn" onclick="doUpload()" disabled style="flex:2;"><span id="upload-lbl">رفع الوثيقة</span></button>
+            <button class="btn btn-ghost" onclick="goStep(1)" id="btn-back" style="flex:1;">
+              <span id="btn-back-lbl">رجوع / Back</span>
+            </button>
+            <button class="btn btn-primary" id="upload-btn" onclick="doUpload()" disabled style="flex:2;">
+              <span id="upload-lbl">رفع الوثيقة / Upload</span>
+            </button>
           </div>
         </div>
 
-        <!-- STEP 3 -->
+        <!-- STEP 3: نجاح -->
         <div class="form-sec" id="fsec-3">
           <div class="success-wrap">
             <div class="success-circle">✓</div>
             <div class="success-title" id="succ-title">تم الرفع بنجاح</div>
-            <div class="success-sub"   id="succ-sub">تم حفظ الوثيقة في ملف الموظف وتحديث الشيت</div>
-            <button class="btn btn-success" onclick="resetForm()" id="btn-again">رفع وثيقة اخرى</button>
+            <div class="success-sub" id="succ-sub">تم حفظ الوثيقة في ملف الموظف وتحديث السجل</div>
+            <button class="btn btn-success" onclick="resetForm()" id="btn-again">
+              <span id="btn-again-lbl">رفع وثيقة اخرى / Upload Another</span>
+            </button>
           </div>
         </div>
 
@@ -207,11 +196,123 @@
 </div>
 
 <script>
-  // ← رابط Apps Script
   var GAS_URL = "https://script.google.com/macros/s/AKfycbzOcf_SaSZ4na9lYjIajTLkT3-apapMxoPruXRG6UCFTIm5UujF_JEYh9mCOL-Mg7pQ2Q/exec";
-
   var lang = 'ar';
-  var state = { empId: '', file: null };
+  var state = { empId: '', file: null, dept: '' };
+
+  // ── قواعد الوثائق حسب القسم ──
+  // الأقسام الإدارية
+  var ADMIN_DEPTS = ['استقبال', 'Receptionist', 'موارد بشرية', 'HR', 'مالية', 'Finance', 'تقنية', 'IT', 'اخرى', 'Other'];
+  // قسم الجودة
+  var QUALITY_DEPTS = ['جودة', 'Quality'];
+
+  function getDeptType(dept) {
+    if (!dept) return 'clinical';
+    var d = dept.toLowerCase();
+    for (var i = 0; i < ADMIN_DEPTS.length; i++) {
+      if (d.indexOf(ADMIN_DEPTS[i].toLowerCase()) !== -1) return 'admin';
+    }
+    for (var i = 0; i < QUALITY_DEPTS.length; i++) {
+      if (d.indexOf(QUALITY_DEPTS[i].toLowerCase()) !== -1) return 'quality';
+    }
+    return 'clinical'; // تمريض، أسنان، جلدية
+  }
+
+  // قائمة الوثائق حسب القسم (مخفي من الموظف: إقرار السرية، تقييم الأداء، عقد العمل، نموذج التعريف)
+  function getDocList(deptType) {
+    var ar = lang === 'ar';
+    var docs = [];
+
+    // مشتركة للكل
+    docs.push({ value: 'الهوية الوطنية',       label: ar ? 'الهوية الوطنية'       : 'National ID' });
+    docs.push({ value: 'سيرة ذاتية',            label: ar ? 'سيرة ذاتية'            : 'CV & Resume' });
+    docs.push({ value: 'التوصيف الوظيفي',       label: ar ? 'التوصيف الوظيفي'       : 'Job Description' });
+    docs.push({ value: 'شهادة الخبرات السابقة', label: ar ? 'شهادة الخبرات السابقة' : 'Experience Certificate' });
+
+    if (deptType === 'clinical') {
+      docs.push({ value: 'ترخيص الهيئة',              label: ar ? 'ترخيص الهيئة'              : 'Health Authority License' });
+      docs.push({ value: 'شهادة BLS',                  label: ar ? 'شهادة BLS'                  : 'BLS Certificate' });
+      docs.push({ value: 'شهادة الداتا فلو',           label: ar ? 'شهادة الداتا فلو'           : 'DataFlow Certificate' });
+      docs.push({ value: 'التسجيل المهني (وزارة الصحة)', label: ar ? 'التسجيل المهني (وزارة الصحة)' : 'MOH Registration' });
+      docs.push({ value: 'تأمين الأخطاء الطبية',      label: ar ? 'تأمين الأخطاء الطبية'      : 'Malpractice Insurance' });
+    }
+
+    if (deptType === 'quality') {
+      docs.push({ value: 'شهادة BLS', label: ar ? 'شهادة BLS' : 'BLS Certificate' });
+    }
+
+    // المؤهل العلمي والدورات للكل
+    docs.push({ value: 'المؤهل العلمي', label: ar ? 'المؤهل العلمي' : 'Academic Qualification' });
+    docs.push({ value: 'الدورات',       label: ar ? 'الدورات التدريبية' : 'Training Courses' });
+
+    return docs;
+  }
+
+  function buildDocSelect(deptType) {
+    var sel = document.getElementById('docType');
+    var ar  = lang === 'ar';
+    sel.innerHTML = '<option value="" disabled selected>' + (ar ? '— اختر —' : '— Select —') + '</option>';
+    var docs = getDocList(deptType);
+    docs.forEach(function(d) {
+      var opt = document.createElement('option');
+      opt.value = d.value;
+      opt.textContent = d.label;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ── اللغة ──
+  var T = {
+    ar: {
+      lbTitle:'نظام الموارد البشرية الرقمي', brandName:'بوابة الموارد البشرية الرقمية',
+      brandSub:'نظام ادارة الجاهزية الوظيفية', chTitle:'رفع الوثائق الرسمية',
+      chSub:'ارفع وثائقك بشكل آمن عبر البوابة الرقمية',
+      sl1:'التحقق', sl2:'الوثيقة', sl3:'الرفع',
+      lEmpid:'الرقم الوظيفي', plName:'الاسم', plDept:'القسم', plStatus:'الحالة',
+      btnVerify:'التحقق', lDoctype:'نوع الوثيقة', lFile:'الملف',
+      ulLabel:'اسحب وافلت الملف هنا', ulSub:'PDF, JPG, PNG, DOC — حتى 10 MB',
+      btnBack:'رجوع', uploadLbl:'رفع الوثيقة',
+      succTitle:'تم الرفع بنجاح', succSub:'تم حفظ الوثيقة في ملف الموظف وتحديث السجل',
+      btnAgain:'رفع وثيقة اخرى',
+      errId:'يرجى ادخال الرقم الوظيفي', errNotFound:'الرقم الوظيفي غير مسجل في النظام',
+      verifying:'جاري التحقق...', uploading:'جاري الرفع...', dir:'rtl'
+    },
+    en: {
+      lbTitle:'Digital HR System', brandName:'Digital HR Portal',
+      brandSub:'Workforce Readiness Management System', chTitle:'Official Document Upload',
+      chSub:'Upload your documents securely through the digital portal',
+      sl1:'Verify', sl2:'Document', sl3:'Upload',
+      lEmpid:'Employee ID', plName:'Name', plDept:'Department', plStatus:'Status',
+      btnVerify:'Verify', lDoctype:'Document Type', lFile:'File',
+      ulLabel:'Drag and drop file here', ulSub:'PDF, JPG, PNG, DOC — up to 10 MB',
+      btnBack:'Back', uploadLbl:'Upload Document',
+      succTitle:'Uploaded Successfully', succSub:'Document saved to employee folder and record updated',
+      btnAgain:'Upload Another Document',
+      errId:'Please enter the employee ID', errNotFound:'Employee ID not found in the system',
+      verifying:'Verifying...', uploading:'Uploading...', dir:'ltr'
+    }
+  };
+
+  function setLang(l) {
+    lang = l;
+    var t = T[l];
+    document.getElementById('html-root').setAttribute('lang', l);
+    document.getElementById('html-root').setAttribute('dir', t.dir);
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.classList.toggle('active',(l==='ar'&&b.textContent==='عربي')||(l==='en'&&b.textContent==='English'));
+    });
+    st('lb-title', t.lbTitle); st('brand-name', t.brandName); st('brand-sub', t.brandSub);
+    st('ch-title', t.chTitle); st('ch-sub', t.chSub);
+    st('sl-1', t.sl1); st('sl-2', t.sl2); st('sl-3', t.sl3);
+    st('l-empid', t.lEmpid); st('pl-name', t.plName); st('pl-dept', t.plDept); st('pl-status', t.plStatus);
+    st('btn-verify-lbl', t.btnVerify); st('l-doctype', t.lDoctype); st('l-file-lbl', t.lFile);
+    st('ul-label', t.ulLabel); st('ul-sub', t.ulSub);
+    st('btn-back-lbl', t.btnBack); st('upload-lbl', t.uploadLbl);
+    st('succ-title', t.succTitle); st('succ-sub', t.succSub);
+    st('btn-again-lbl', t.btnAgain);
+    if (state.dept) buildDocSelect(getDeptType(state.dept));
+  }
+  function st(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; }
 
   // Pre-fill من URL
   (function(){
@@ -219,15 +320,6 @@
     var id = params.get('empId');
     if (id) document.getElementById('empId').value = id;
   })();
-
-  function setLang(l) {
-    lang = l;
-    document.getElementById('html-root').setAttribute('lang', l);
-    document.getElementById('html-root').setAttribute('dir', l === 'ar' ? 'rtl' : 'ltr');
-    document.querySelectorAll('.lang-btn').forEach(function(b) {
-      b.classList.toggle('active', (l==='ar'&&b.textContent==='عربي')||(l==='en'&&b.textContent==='English'));
-    });
-  }
 
   function goStep(step) {
     [1,2,3].forEach(function(i) {
@@ -243,8 +335,8 @@
 
   function verifyEmp() {
     var id = document.getElementById('empId').value.trim();
-    if (!id) { showAlert('error', lang==='ar'?'يرجى ادخال الرقم الوظيفي':'Please enter employee ID'); return; }
-    showAlert('info', lang==='ar'?'جاري التحقق...':'Verifying...');
+    if (!id) { showAlert('error', T[lang].errId); return; }
+    showAlert('info', T[lang].verifying);
 
     fetch(GAS_URL + '?action=verify&empId=' + encodeURIComponent(id))
       .then(function(r){ return r.json(); })
@@ -256,20 +348,22 @@
           document.getElementById('pv-status').textContent = emp.status || '—';
           document.getElementById('emp-preview').classList.add('show');
           state.empId = id;
-          setTimeout(function(){ proceedStep2(id); }, 1200);
+          state.dept  = emp.dept || '';
+          setTimeout(function(){ proceedStep2(id, emp.dept); }, 1200);
         } else {
-          showAlert('error', lang==='ar'?'الرقم الوظيفي غير مسجل':'Employee ID not found');
+          showAlert('error', T[lang].errNotFound);
         }
       })
       .catch(function() {
         clearAlert();
         state.empId = id;
-        proceedStep2(id);
+        proceedStep2(id, '');
       });
   }
 
-  function proceedStep2(id) {
+  function proceedStep2(id, dept) {
     document.getElementById('empId-disp').value = id;
+    buildDocSelect(getDeptType(dept || ''));
     goStep(2);
   }
 
@@ -314,7 +408,7 @@
     var interval = setInterval(function(){
       pct = Math.min(pct + Math.random()*12, 85);
       bar.style.width = pct + '%';
-      pLbl.textContent = (lang==='ar'?'جاري الرفع... ':'Uploading... ') + Math.round(pct) + '%';
+      pLbl.textContent = T[lang].uploading + ' ' + Math.round(pct) + '%';
     }, 300);
 
     var reader = new FileReader();
@@ -329,10 +423,7 @@
         mimeType: state.file.type
       };
 
-      fetch(GAS_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
+      fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(function(r){ return r.json(); })
       .then(function(res) {
         clearInterval(interval);
@@ -344,7 +435,7 @@
           else {
             showAlert('error', res.message);
             btn.disabled = false;
-            lbl.textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+            lbl.textContent = T[lang].uploadLbl;
           }
         }, 600);
       })
@@ -353,22 +444,22 @@
         prog.classList.remove('show');
         showAlert('error', err.message || 'خطأ في الرفع');
         btn.disabled = false;
-        lbl.textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+        lbl.textContent = T[lang].uploadLbl;
       });
     };
     reader.readAsDataURL(state.file);
   }
 
   function resetForm() {
-    state = { empId: '', file: null };
+    state = { empId: '', file: null, dept: '' };
     document.getElementById('empId').value = '';
-    document.getElementById('docType').value = '';
+    document.getElementById('docType').innerHTML = '';
     document.getElementById('fileInput').value = '';
     document.getElementById('file-chosen').classList.remove('show');
     document.getElementById('upload-zone').classList.remove('has-file');
     document.getElementById('emp-preview').classList.remove('show');
     document.getElementById('upload-btn').disabled = true;
-    document.getElementById('upload-lbl').textContent = lang==='ar'?'رفع الوثيقة':'Upload Document';
+    document.getElementById('upload-lbl').textContent = T[lang].uploadLbl;
     goStep(1); clearAlert();
   }
 
